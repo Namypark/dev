@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+    {% block content %}
+    <h1>Project</h1>
+    {% for info in details %}
+        <ul>
+            <li>
+            Title: <a href="{% url 'products' info.id %}">{{ info.title }}</a> -------> {{ info.description }}
+            </li>
+        </ul>
+    {% endfor %}
+
+
+ {% endblock content %}
