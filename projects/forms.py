@@ -14,6 +14,7 @@ class ProjectForm(ModelForm):
     def __init__(self, *args, **kwargs):
         #inherits the form(telling it the class we are modifying)
         super(ProjectForm, self).__init__(*args, **kwargs)
+        #can set the classes one at a time or just use a for loop
         for field in self.fields:
             self.fields[field].widget.attrs.update({'class':"input"})
 

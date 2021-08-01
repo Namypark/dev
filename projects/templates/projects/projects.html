@@ -29,12 +29,12 @@
     <section class="projectsList">
     <div class="container">
       <div class="grid grid--three">
-  {% for project in projects %}
+        {% for project in projects %}
         <div class="column">
           <div class="card project">
             <a href="{% url 'products' project.id %}" class="project">
               <img
-                class="project__thumbnail"
+                 class="project__thumbnail"
                 src="{{ project.featured_image.url }}"
                 alt="project thumbnail"
               />
@@ -43,9 +43,7 @@
                   {{ project.title }}
                 </h3>
                 <p>
-                  <a class="project__author" href="profile.html"
-                    >By Dennis Ivanov</a
-                  >
+                  <a class="project__author" href="{% url 'user-profile' project.owner.username %}">By<b> {{project.owner.username}}</b></a>
                 </p>
                 <p class="project--rating">
                   <span style="font-weight: bold">{{ project.vote_ratio }}%</span> Postitive Feedback
@@ -63,6 +61,8 @@
           </div>
         </div>
   {% endfor %}
+  </div>
+  </div>
   </section>
 </main>
 {% endblock content %}

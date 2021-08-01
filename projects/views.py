@@ -10,6 +10,7 @@ def projects(request):
 
     projects = Project.objects.all()
     context = {"projects": projects}
+    
     return render(request, "projects/projects.html", context)
 
 def products(request, pk):
