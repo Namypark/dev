@@ -43,7 +43,7 @@
                   {{ project.title }}
                 </h3>
                 <p>
-                  <a class="project__author" href="{% url 'user-profile' project.owner.username %}">By<b> {{project.owner.username}}</b></a>
+                  <a class="project__author" href="{% url 'user-profile' project.owner %}">By<b> {{project.owner.name}}</b></a>
                 </p>
                 <p class="project--rating">
                   <span style="font-weight: bold">{{ project.vote_ratio }}%</span> Postitive Feedback
