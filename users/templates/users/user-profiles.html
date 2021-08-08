@@ -29,7 +29,7 @@
                   ><i class="im im-twitter"></i
                 ></a>
               </li>
-              {% endif %} {% if user.social_linkedin %}
+              {% endif %} {% if profile.social_linkedin %}
 
               <li>
                 <a
@@ -39,12 +39,12 @@
                   ><i class="im im-linkedin"></i
                 ></a>
               </li>
-              {% endif %} {% if user.social_instagram %}
+              {% endif %} {% if profile.social_instagram %}
 
               <li>
                 <a
                   title="Instagram"
-                  href="{{user.social_instagram}}"
+                  href="{{profile.social_instagram}}"
                   target="_blank"
                   ><i class="im im-instagram"></i
                 ></a>
