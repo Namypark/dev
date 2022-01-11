@@ -1,13 +1,15 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, Skill
+from django.db.models import Q
 from django.contrib.auth import login, authenticate, logout
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
-from .forms import CustomUserCreationForm, ProfileForm
+from .forms import CustomUserCreationForm, ProfileForm, SkillForm
+from .utils import searchProfiles, paginateProfiles
 
-# Create your views here.  
+ # Create your views here.
 
 
 @csrf_protect
@@ -27,9 +29,8 @@ def loginUser(request):
             messages.error(request, "Username does not exist")
 
         user = authenticate(request, username=username, password=password)
-        if user is not None:
-            messages.success(request, f"Welcome {user}!")
 
+        if user is not None:
             login(request, user)
             return redirect("profiles")
         else:
@@ -72,9 +73,10 @@ def registerUser(request):
 
 
 def profiles(request):
-    profiles = Profile.objects.all()
-    context = {"profiles": profiles}
 
+    profiles, search_query = searchProfiles(request)
+    custom_range, profiles = paginateProfiles(request,profiles, 3)
+    context = {"profiles": profiles, "search_query": search_query, 'custom_range': custom_range}
     return render(request, "users/profile.html", context)
 
 
@@ -93,20 +95,73 @@ def userAccount(request):
     profile = request.user.profile
     topskills = profile.skill_set.all()
     projects = profile.project_set.all()
-    context = {"profile": profile,'topskills':topskills,'projects':projects}
+    context = {"profile": profile, "topskills": topskills, "projects": projects}
     return render(request, "users/user-account.html", context)
 
-@login_required(login_url='login')
+
+@login_required(login_url="login")
 def editAccount(request):
     profile = request.user.profile
-    forms  = ProfileForm(instance= profile)
+    forms = ProfileForm(instance=profile)
 
-    if request.method == 'POST':
-        forms = ProfileForm(request.POST,request.FILES, instance=profile)
+    if request.method == "POST":
+        forms = ProfileForm(request.POST, request.FILES, instance=profile)
         if forms.is_valid():
-            forms.save()   
-            messages.success(request,"profile updated successfully")
-            return redirect('user-account')
+            forms.save()
+            messages.success(request, "profile updated successfully")
+            return redirect("user-account")
 
-    context = {'forms':forms}
-    return render(request, "users/profile-form.html",context)
+    context = {"forms": forms}
+    return render(request, "users/profile-form.html", context)
+
+
+# * performing CRUD operations on the skills
+# --------------------------------------------> C
+@login_required(login_url="login")
+def createSkill(request):
+    profile = request.user.profile
+    forms = SkillForm
+    if request.method == "POST":
+        forms = SkillForm(request.POST)
+        if forms.is_valid():
+            skill = forms.save(commit=False)
+            skill.owner = profile
+            skill.save()
+            messages.success(request, "skill added successfully")
+            return redirect("user-account")
+
+    context = {"forms": forms}
+    return render(request, "users/skill-form.html", context)
+
+
+# --------------------------------------------> U
+
+
+@login_required(login_url="login")
+def updateSkill(request, pk):
+
+    profile = request.user.profile
+    skill = profile.skill_set.get(id=pk)
+    forms = SkillForm(instance=skill)
+    if request.method == "POST":
+        forms = SkillForm(request.POST, instance=skill)
+        if forms.is_valid():
+            skill = forms.save(commit=False)
+            messages.success(request, "skill updated successfully")
+            return redirect("user-account")
+
+    context = {"forms": forms}
+    return render(request, "users/skill-form.html", context)
+
+
+# --------------------------------------------> C
+def deleteSkill(request, pk):
+
+    profile = request.user.profile
+    skill = profile.skill_set.get(id=pk)
+    if request.method == "POST":
+        skill.delete()
+        messages.success(request, "skill was deleted successfully")
+        return redirect("user-account")
+    context = {"object": skill}
+    return render(request, "delete.html", context)

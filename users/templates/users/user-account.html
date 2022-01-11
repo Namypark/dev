@@ -23,20 +23,20 @@
                 {% endif %}
                 {% if profile.social_twitter %}
                 <li>
-                  <a title="Twitter" href="#" target="_blank"><i class="im im-twitter"></i></a>
+                  <a title="Twitter" href="{{profile.social_twitter}}" target="_blank"><i class="im im-twitter"></i></a>
                 </li>
                 {% else %}
                 {% endif %}
                 
                 {% if profile.social_linkedin %}
                 <li>
-                  <a title="LinkedIn" href="#" target="_blank"><i class="im im-linkedin"></i></a>
+                  <a title="LinkedIn" href="{{profile.social_linkedin}}" target="_blank"><i class="im im-linkedin"></i></a>
                 </li>
                  {% else %}
                 {% endif %}
                 {% if profile.social_instagram %}
                 <li>
-                  <a title="Instagram" href="#" target="_blank"><i class="im im-instagram"></i></a>
+                  <a title="Instagram" href="{{profile.social_instagram}}" target="_blank"><i class="im im-instagram"></i></a>
                 </li>
                  {% else %}
                 {% endif %}
@@ -55,7 +55,7 @@
           </div>
           <div class="settings">
             <h3 class="settings__title">Skills</h3>
-            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="#"><i class="im im-plus"></i> Add Skill</a>
+            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'create-skill' %}"><i class="im im-plus"></i> Add Skill</a>
           </div>
 
           <table class="settings__table">
@@ -69,8 +69,8 @@
                 </p>
               </td>
               <td class="settings__tableActions">
-                <a class="tag tag--pill tag--main settings__btn" href=""><i class="im im-edit"></i> Edit</a>
-                <a class="tag tag--pill tag--main settings__btn" href=""><i class="im im-x-mark-circle-o"></i>
+                <a class="tag tag--pill tag--main settings__btn" href="{% url 'update-skill' skills.id %}"><i class="im im-edit"></i> Edit</a>
+                <a class="tag tag--pill tag--main settings__btn" href="{% url 'delete-skill' skills.id %}?next=/account"><i class="im im-x-mark-circle-o"></i>
                   Delete</a>
               </td>
             </tr>
@@ -92,8 +92,8 @@
                   {{project.description|slice:"150"}}
               </td>
               <td class="settings__tableActions">
-                <a class="tag tag--pill tag--main settings__btn" href="{% url 'products' project.id %}"><i class="im im-edit"></i> Edit</a>
-                <a class="tag tag--pill tag--main settings__btn" href="{% url 'products' project.id %}"><i class="im im-x-mark-circle-o"></i>
+                <a class="tag tag--pill tag--main settings__btn" href="{% url 'update-project' project.id %}"><i class="im im-edit"></i> Edit</a>
+                <a class="tag tag--pill tag--main settings__btn" href="{% url 'delete-project' project.id %}?next=/account"><i class="im im-x-mark-circle-o"></i>
                   Delete</a>
               </td>
             </tr>   

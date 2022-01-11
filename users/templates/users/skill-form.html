@@ -1,5 +1,6 @@
-{% extends "base.html" %} {% block content %}
+{% extends 'base.html' %}
 
+{% block content %}
 <main class="formPage my-xl">
         <div class="content-box">
             <div class="formWrapper">
@@ -9,10 +10,10 @@
                 <form class="form" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <!-- Input:Text -->
-                      {% for forms in form %}
+                      {% for form in forms %}
                           <div class="form__field">
-                            <label for="formInput#text">{{forms.label}}: </label>
-                            {{forms}}
+                            <label for="formInput#text">{{form.label}}: </label>
+                            {{form}}
                           </div> 
                       {% endfor %}
                     <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
