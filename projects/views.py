@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib import messages
 from .models import Project
-from .forms import ProjectForm
+from .forms import ProjectForm, ReviewForm
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib import messages
 from .utils import searchProjects, paginateProject
+
 # Create your views here
 
 # READ---------------------------------------------------------->
@@ -21,12 +23,32 @@ def projects(request):
 def products(request, pk):
 
     projectObj = Project.objects.get(id=pk)
+    form = ReviewForm()
     tags = projectObj.tags.all()
     
+    if request.method == "POST":
+        '''
+        if the request is post
+        1. get the form 
+        2. get out the review commit=False gets the instance of review
+        3. get the project
+        4. get the user
+        '''
+        form = ReviewForm(request.POST)
+        review = form.save(commit=False)
+        review.project = projectObj
+        review.owner = request.user.profile
+        review.save()
+        
+        projectObj.getVoteCount
+        
+         #? update project votecount
+        messages.success(request, "Your review was successfully updated!")
+        return redirect('products', pk=projectObj.id)
     return render(
         request,
         "projects/single-projects.html",
-        {"projectObj": projectObj, "tags": tags},
+        {"projectObj": projectObj, "tags": tags, 'form':form},
     )
 #READ--------------------------------------------------------------------->
 

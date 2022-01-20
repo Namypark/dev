@@ -20,7 +20,7 @@ def loginUser(request):
         return redirect("profiles")
 
     if request.method == "POST":
-        username = request.POST["username"]
+        username = request.POST["username"].lower()
         password = request.POST["password"]
 
         try:
@@ -32,7 +32,7 @@ def loginUser(request):
 
         if user is not None:
             login(request, user)
-            return redirect("profiles")
+            return redirect(request.GET['next'] if 'next' in request.GET else 'user-account')
         else:
             messages.error(
                 request, "username or password is not correct please try again"
@@ -81,7 +81,7 @@ def profiles(request):
 
 
 def userProfile(request, pk):
-    profile = Profile.objects.get(username=pk)
+    profile = Profile.objects.get(id=pk)
     topskills = profile.skill_set.exclude(description__exact="")
     otherskills = profile.skill_set.filter(description="")
 
