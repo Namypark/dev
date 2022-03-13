@@ -21,7 +21,7 @@ def projects(request):
     return render(request, "projects/projects.html", context)
 
 def products(request, pk):
-
+    
     projectObj = Project.objects.get(id=pk)
     form = ReviewForm()
     tags = projectObj.tags.all()
